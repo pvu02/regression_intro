@@ -50,6 +50,7 @@ reg_plot <- ggplot(sample1_analytic_data, aes(x=IQ, y=performance))
 reg_plot <- reg_plot + geom_point()
 reg_plot <- reg_plot + theme_classic()
 reg_plot <- reg_plot + geom_smooth(data=CI_data, aes(x=IQ, y=fit, ymin=lwr, ymax=upr), stat="identity")
+# Alternative - reg_plot <- reg_plot + geom_smooth(method="lm", se=TRUE)
 reg_plot <- reg_plot + geom_smooth(data=PI_data, aes(x=IQ, y=fit, ymin=lwr, ymax=upr), stat="identity")
 print(reg_plot)
 
