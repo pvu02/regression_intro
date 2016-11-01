@@ -20,3 +20,36 @@ apa.reg.table(sample1_lm_results)
 population_lm_results <- lm(performance ~ IQ, data=population_data)
 summary(population_lm_results)
 ## Real slope (b weight) = .20
+
+# Predicted value for a single person
+x_axis_range <- data.frame(IQ=c(120))
+CI_data <- predict(sample1_lm_results, newdata=x_axis_range, interval="confidence", level=.95)
+
+CI_data <- as.data.frame(cbind(x_axis_range, CI_data))
+
+
+# predicted value for entire x-axis range
+min_predictor <- min(sample1_analytic_data$IQ)
+max_predictor <- max(sample1_analytic_data$IQ)
+
+x_axis_range <- data.frame(IQ=seq(min_predictor, max_predictor, by=.5))
+
+# Confidence intervals
+CI_data <- predict(sample1_lm_results, newdata=x_axis_range, interval="confidence", level=.95)
+CI_data <- as.data.frame(cbind(x_axis_range, CI_data))
+
+# Prediction intervals
+PI_data <- predict(sample1_lm_results, newdata=x_axis_range, interval="prediction", level=.95)
+PI_data <- as.data.frame(cbind(x_axis_range, PI_data))
+
+head(CI_data)
+head(PI_data)
+## PI wider than CI as expected
+
+reg_plot <- ggplot(sample1_analytic_data, aes(x=IQ, y=performance))
+reg_plot <- reg_plot + geom_point()
+reg_plot <- reg_plot + theme_classic()
+reg_plot <- reg_plot + geom_smooth(data=CI_data, aes(x=IQ, y=fit, ymin=lwr, ymax=upr), stat="identity")
+reg_plot <- reg_plot + geom_smooth(data=PI_data, aes(x=IQ, y=fit, ymin=lwr, ymax=upr), stat="identity")
+print(reg_plot)
+
